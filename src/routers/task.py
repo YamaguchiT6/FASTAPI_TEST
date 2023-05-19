@@ -32,20 +32,22 @@ async def create_conversation(
     content = conversation_body.question
 
     logger.info(content)
+    try:
+        openai.api_key = "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"
 
-    openai.api_key = "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"
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+            {"role": "user", "content": content},
+        ],
+        )
 
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[
-        {"role": "user", "content": content},
-    ],
-    )
+        q_and_a = conversation_schema.ConversationResponse()
+        q_and_a.question = content
+        q_and_a.answer = response.choices[0]["message"]["content"].strip()
 
-    q_and_a = conversation_schema.ConversationResponse()
-    q_and_a.question = content
-    q_and_a.answer = response.choices[0]["message"]["content"].strip()
+        logger.info(q_and_a)
 
-    logger.info(q_and_a)
-
-    return await conversation_crud.create_sentence(db, q_and_a)
+        return await conversation_crud.create_sentence(db, q_and_a)
+    except openai.error.AuthenticationError as e:
+        return f"エラーが発生:{e}"

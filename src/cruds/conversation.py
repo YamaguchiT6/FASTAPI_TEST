@@ -22,10 +22,10 @@ async def create_sentence(
     # conversation = conversation_model.Conversation(**conversation_create.dict())
 
     logger.info(conversation_create)
-    con = conversation_model.Conversation(id=2001,**conversation_create.dict())
-    # db.add(con)
-    # await db.commit()
-    # await db.refresh(con)
+    con = conversation_model.Conversation(**conversation_create.dict())
+    db.add(con)
+    await db.commit()
+    await db.refresh(con)
     return con
 
 async def list_conversation(db: AsyncSession) -> List[Tuple[int, str, str]]:
