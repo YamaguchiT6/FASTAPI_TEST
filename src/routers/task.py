@@ -33,7 +33,7 @@ async def create_conversation(
 
     logger.info(content)
     try:
-        openai.api_key = "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"
+        openai.api_key = "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"
 
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
